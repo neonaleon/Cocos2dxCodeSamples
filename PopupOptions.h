@@ -1,43 +1,69 @@
-#ifndef CLASSES_UI_POPUPOPTIONS_H
-#define CLASSES_UI_POPUPOPTIONS_H
+#ifndef CLASSES_UTILITY_UI_POPUPOPTIONS_H
+#define CLASSES_UTILITY_UI_POPUPOPTIONS_H
 
 #include <cocos2d.h>
 
 USING_NS_CC;
 
-class PopupButton : public CCObject
+/**
+  * @brief Contains the option values for a popup.
+  *
+  * An object of this struct is required to create a popup.
+  * @see NyagaApp::createPopup()
+  */
+struct PopupOptions : public CCObject
 {
-public:
-    CREATE_FUNC( PopupButton );
-    bool init(){ return true; }
-
-    CC_SYNTHESIZE(const char*, _text, Text);
-    CC_SYNTHESIZE(SEL_CallFunc, _handler, Handler);
-    CC_SYNTHESIZE(CCObject*, _target, Target);
-};
-
-class PopupOptions : public CCObject
-{
-public:
     CREATE_FUNC( PopupOptions );
-    bool init();
 
-    PopupOptions();
-    ~PopupOptions();
+    PopupOptions() {
+        bodyFontSize = 0;
+        bodyText = "";
+        buttonFontSize = 0;
+        footerFontSize = 0;
+        footerText = "";
+        headerFontSize = 0;
+        headerText = "";
+        insetPadding = CCSizeZero;
+        origin = CCPointZero;
+        target = CCPointZero;
+        body = NULL;
+    }
+    ~PopupOptions() {}
 
-    CC_SYNTHESIZE(int, _headerFontSize, HeaderFontSize);
-    CC_SYNTHESIZE(int, _bodyFontSize, BodyFontSize);
-    CC_SYNTHESIZE(int, _buttonFontSize, ButtonFontSize);
-    CC_SYNTHESIZE(CCSize, _insetPadding, InsetPadding);
-    CC_SYNTHESIZE(CCPoint, _origin, Origin);
-    CC_SYNTHESIZE(CCPoint, _target, Target);
-    CC_SYNTHESIZE(const char*, _headerText, HeaderText);
-    CC_SYNTHESIZE(const char*, _bodyText, BodyText);
+    bool init() {
+        CCEGLView *pEGLView = CCEGLView::sharedOpenGLView();
+        bodyFontSize = 16;
+        bodyText = "Placeholder Body Text";
+        buttonFontSize = 16;
+        footerFontSize = 16;
+        footerText = "Placeholder Footer Text";
+        headerFontSize = 16;
+        headerText = "Placeholder Header Text";
+        insetPadding = CCSizeMake( 10, 10 );
+        origin = pEGLView->getDesignResolutionSize() * 0.5;
+        target = pEGLView->getDesignResolutionSize() * 0.5;
+        return true;
+    }
 
-    void addButton(const char* text, CCObject* pTarget, SEL_CallFunc pHandler);
-    CCArray* getButtons();
-private:
-    CCArray* _buttons;
+    int bodyFontSize;
+    const char* bodyText;
+    int buttonFontSize;
+    int footerFontSize;
+    const char* footerText;
+    int headerFontSize;
+    const char* headerText;
+
+    /** @brief The padding of the popup inset.*/
+    CCSize insetPadding;
+
+    /** @brief The popup will animate in from, and animate out to the Origin. */
+    CCPoint origin;
+
+    /** @brief The popup will animate in and reach its full size at the Target. */
+    CCPoint target; 
+
+    // pass a pointer to the popup, it will be retained by the popup
+    CCSprite *body;
 };
 
-#endif // CLASSES_UI_POPUPOPTIONS_H
+#endif // CLASSES_UTILITY_UI_POPUPOPTIONS_H
